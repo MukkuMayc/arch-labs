@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
-project(arch_labs C)
+project(arch_labs)
 
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 message(STATUS "Checking OpenMP")
 find_package(OpenMP)
