@@ -32,3 +32,18 @@ template<typename T>
 [[nodiscard]] size_t Matrix<T>::getHeight() const {
     return height;
 }
+
+template <typename T>
+std::ostream &operator<<(std::ostream &out, Matrix<T> &matrix) {
+    for (int i = 0; i < matrix.getHeight(); ++i) {
+        for (int j = 0; j < matrix.getWidth(); ++j) {
+            out << matrix[i][j] << ' ';
+        }
+        out << std::endl;
+    }
+    return out;
+}
+
+template class Matrix<int>;
+
+template std::ostream& operator<<<int>(std::ostream&, Matrix<int>&);

@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
-project(arch_labs)
+project(arch_labs
+        LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -15,8 +16,6 @@ IF(OPENMP_FOUND)
 ELSE()
     message("Missed OpenMP!")
 ENDIF()
-
-include_directories(${PROJECT_SOURCE_DIR}/libs/include)
 
 add_subdirectory(libs)
 add_subdirectory(task_1)

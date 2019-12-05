@@ -26,14 +26,6 @@ public:
 };
 
 template<typename T>
-std::ostream &operator<<(std::ostream &out, Matrix<T> &matrix) {
-    for (int i = 0; i < matrix.getHeight(); ++i) {
-        for (int j = 0; j < matrix.getWidth(); ++j) {
-            out << matrix[i][j] << ' ';
-        }
-        out << std::endl;
-    }
-    return out;
-}
+extern std::ostream &operator<<(std::ostream &out, Matrix<T> &matrix);
 
 #endif // ARCH_LABS_MATRIX_HPP
