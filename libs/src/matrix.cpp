@@ -2,7 +2,12 @@
 // Created by sergo on 12/5/19.
 //
 
+#include <chrono>
+#include <random>
+
 #include "matrix.hpp"
+
+using namespace std;
 
 template<typename T>
 Matrix<T>::Matrix(size_t n, size_t m): height(n), width(m) {
@@ -39,9 +44,25 @@ std::ostream &operator<<(std::ostream &out, Matrix<T> &matrix) {
         for (int j = 0; j < matrix.getWidth(); ++j) {
             out << matrix[i][j] << ' ';
         }
-        out << std::endl;
+        out << endl;
     }
     return out;
+}
+
+void randomizeMatrix(Matrix<int> &matrix) {
+    int low = 0;
+    int high = 1e6;
+    auto now = chrono::system_clock::now();
+    default_random_engine generator(now.time_since_epoch().count());
+    uniform_int_distribution<int> distribution(low, high);
+    int i, j;
+#pragma omp parallel for default(shared), private(i, j)
+    for (i = 0; i < matrix.getHeight(); ++i) {
+#pragma omp parallel for default(shared), private(j)
+        for (j = 0; j < matrix.getWidth(); ++j) {
+            matrix[i][j] = distribution(generator);
+        }
+    }
 }
 
 template class Matrix<int>;
