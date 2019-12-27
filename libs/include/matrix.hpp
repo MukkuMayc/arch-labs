@@ -14,11 +14,15 @@ class Matrix {
     size_t height;
 
 public:
-    explicit Matrix(size_t, size_t);
+    explicit Matrix(size_t height, size_t width);
 
     explicit Matrix(size_t);
 
+    explicit Matrix(T** &&array, size_t height, size_t width);
+
     T *operator[](size_t);
+
+    bool operator==(Matrix<T>& other);
 
     [[nodiscard]] size_t getWidth() const;
 

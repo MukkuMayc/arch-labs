@@ -29,6 +29,30 @@ T *Matrix<T>::operator[](size_t n) {
 }
 
 template<typename T>
+bool Matrix<T>::operator==(Matrix<T>& other) {
+    if (height != other.height or width != other.width) {
+        return false;
+    }
+    for (int i = 0; i < height; ++i) {
+        for (int j = 0; j < width; ++j) {
+            if (data[i][j] != other.data[i][j]) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+template<typename T>
+Matrix<T>::Matrix(T** &&array, size_t height, size_t width) {
+    data = array;
+    array = nullptr;
+    this->height = height;
+    this->width = width;
+}
+
+template<typename T>
 [[nodiscard]] size_t Matrix<T>::getWidth() const {
     return width;
 }
@@ -56,9 +80,9 @@ void randomizeMatrix(Matrix<int> &matrix) {
     default_random_engine generator(now.time_since_epoch().count());
     uniform_int_distribution<int> distribution(low, high);
     int i, j;
-#pragma omp parallel for default(shared), private(i, j)
+#pragma omp parallel for default(none), private(i, j), shared(distribution, generator, matrix)
     for (i = 0; i < matrix.getHeight(); ++i) {
-#pragma omp parallel for default(shared), private(j)
+#pragma omp parallel for default(shared), private(j), shared(distribution, generator, matrix)
         for (j = 0; j < matrix.getWidth(); ++j) {
             matrix[i][j] = distribution(generator);
         }
