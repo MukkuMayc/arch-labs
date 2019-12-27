@@ -12,10 +12,10 @@ int maxFromMinsParallel(Matrix<int> &A) {
     int rowMin[size];
     int i, j;
     int max = 0;
-#pragma omp parallel for default(shared), private(i, j), reduction(max:max)
+#pragma omp parallel for reduction(max:max), private(i, j), shared(A, size), default(none)
     for (i = 0; i < size; ++i) {
         int min = 1e8;
-#pragma omp parallel for reduction(min:min), private(j)
+#pragma omp parallel for reduction(min:min), private(j), shared(A, i, size), default(none)
         for (j = 1; j < size; ++j) {
             if (A[i][j] < min) {
                 min = A[i][j];
