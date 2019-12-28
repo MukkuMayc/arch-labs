@@ -10,21 +10,31 @@ using namespace std;
 int maxFromMinsParallel(Matrix<int> &A) {
     int size = A.getWidth();
     int rowMin[size];
-    int i, j;
     int max = 0;
-#pragma omp parallel for reduction(max:max), private(i, j), shared(A, size), default(none)
-    for (i = 0; i < size; ++i) {
-        int min = 1e8;
-#pragma omp parallel for reduction(min:min), private(j), shared(A, i, size), default(none)
-        for (j = 1; j < size; ++j) {
-            if (A[i][j] < min) {
-                min = A[i][j];
+#pragma omp parallel shared(A, size, max, rowMin) default(none)
+    {
+#pragma omp for
+        for (int i = 0; i < size; ++i) {
+            rowMin[i] = A[i][0];
+        }
+
+#pragma omp for
+        for (int i = 0; i < size; ++i) {
+            for (int j = 1; j < size; ++j) {
+                if (A[i][j] < rowMin[i]) {
+                    rowMin[i] = A[i][j];
+                }
             }
         }
-        if (min > max) {
-            max = min;
+
+#pragma omp for reduction(max:max)
+        for (int i = 0; i < size; ++i) {
+            if (max < rowMin[i]) {
+                max = rowMin[i];
+            }
         }
-    }
+    };
+
     cout << "Max: " << max << endl;
 
     return max;
