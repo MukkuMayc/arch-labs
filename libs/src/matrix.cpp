@@ -73,12 +73,13 @@ std::ostream &operator<<(std::ostream &out, Matrix<T> &matrix) {
     return out;
 }
 
-void randomizeMatrix(Matrix<int> &matrix) {
+template<typename T>
+void randomizeMatrix(Matrix<T> &matrix) {
     int low = 0;
     int high = 1e6;
     auto now = chrono::system_clock::now();
     default_random_engine generator(now.time_since_epoch().count());
-    uniform_int_distribution<int> distribution(low, high);
+    uniform_int_distribution<T> distribution(low, high);
     int i, j;
 #pragma omp parallel for default(none), private(i, j), shared(distribution, generator, matrix)
     for (i = 0; i < matrix.getHeight(); ++i) {
@@ -90,5 +91,10 @@ void randomizeMatrix(Matrix<int> &matrix) {
 }
 
 template class Matrix<int>;
+template class Matrix<uint64_t>;
 
 template std::ostream& operator<<<int>(std::ostream&, Matrix<int>&);
+template std::ostream& operator<<<uint64_t>(std::ostream&, Matrix<uint64_t>&);
+
+template void randomizeMatrix<int>(Matrix<int>&);
+template void randomizeMatrix<uint64_t>(Matrix<uint64_t>&);

@@ -75,7 +75,8 @@ void printExecTime(F &function, Matrix<int>& A) {
 int main() {
     const int size = 20000;
     Matrix<int> A(size);
-    printExecTime(randomizeMatrix, A);
+    // printExecTime(randomizeMatrix, A);
+    randomizeMatrix(A);
     printExecTime(maxFromMinsOneThread, A);
     printExecTime(maxFromMinsParallel, A);
     return 0;

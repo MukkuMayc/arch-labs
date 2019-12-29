@@ -32,6 +32,7 @@ public:
 template<typename T>
 extern std::ostream &operator<<(std::ostream &out, Matrix<T> &matrix);
 
-extern void randomizeMatrix(Matrix<int>& matrix);
+template<typename T>
+extern void randomizeMatrix(Matrix<T>& matrix);
 
 #endif // ARCH_LABS_MATRIX_HPP
