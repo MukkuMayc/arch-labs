@@ -42,14 +42,14 @@ Matrix<uint64_t>* prodOneThread(Matrix<uint64_t>& A, Matrix<uint64_t>& B) {
 }
 
 // block-striped data decomposition
-Matrix<uint64_t>* prodBS(Matrix<uint64_t> &A, Matrix<uint64_t> &B) {
+Matrix<uint64_t>* prodBS(Matrix<uint64_t> &A, Matrix<uint64_t> &B, int threads = 4) {
     if (A.getWidth() != B.getHeight()) {
         throw runtime_error("Wrong size");
     }
     auto resP = new Matrix<uint64_t>(A.getHeight(), B.getWidth());
     auto &res = *resP;
 
-#pragma omp parallel shared(A, B, res, cout) default(none)
+#pragma omp parallel shared(A, B, res, cout) default(none) num_threads(threads)
     {
         int threadsNum = omp_get_num_threads();
 #pragma omp for schedule(static) collapse(2)
@@ -78,14 +78,14 @@ Matrix<uint64_t>* prodBS(Matrix<uint64_t> &A, Matrix<uint64_t> &B) {
 }
 
 // checkerboard data decomposition
-Matrix<uint64_t>* prodCB(Matrix<uint64_t> &A, Matrix<uint64_t> &B) {
+Matrix<uint64_t>* prodCB(Matrix<uint64_t> &A, Matrix<uint64_t> &B, int threads = 4) {
     if (A.getWidth() != B.getHeight()) {
         throw runtime_error("Wrong size");
     }
     auto resP = new Matrix<uint64_t>(A.getHeight(), B.getWidth());
     auto &res = *resP;
 
-#pragma omp parallel shared(A, B, res) default(none)
+#pragma omp parallel shared(A, B, res) default(none) num_threads(threads)
     {
         int blocksVer = omp_get_num_threads();
         int blocksHor = omp_get_num_threads();
