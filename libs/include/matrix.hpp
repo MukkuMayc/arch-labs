@@ -27,6 +27,8 @@ public:
     [[nodiscard]] size_t getWidth() const;
 
     [[nodiscard]] size_t getHeight() const;
+
+    ~Matrix();
 };
 
 template<typename T>

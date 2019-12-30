@@ -62,6 +62,13 @@ template<typename T>
     return height;
 }
 
+template<typename T> Matrix<T>::~Matrix() {
+    if (data) {
+        delete[] data;
+        data = nullptr;
+    }
+}
+
 template <typename T>
 std::ostream &operator<<(std::ostream &out, Matrix<T> &matrix) {
     for (int i = 0; i < matrix.getHeight(); ++i) {
