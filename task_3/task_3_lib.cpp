@@ -5,6 +5,7 @@
 #include <random>
 #include <chrono>
 #include <iostream>
+#include <omp.h>
 #include "matrix.hpp"
 
 using namespace std;
@@ -36,13 +37,13 @@ vector<int> MatVecMult(Matrix<int> M, vector<int> V) {
 }
 
 // rowwise data decomposition
-vector<int> MatVecMultRow(Matrix<int> M, vector<int> V) {
+vector<int> MatVecMultRow(Matrix<int> &M, vector<int> &V, int threads = 4) {
     if (M.getWidth() != V.size()) {
         throw runtime_error("Wrong size");
     }
 
     vector<int> res(M.getHeight());
-#pragma omp parallel for shared(M, V, res) default(none)
+#pragma omp parallel for shared(M, V, res) default(none) num_threads(threads)
     for (int i = 0; i < M.getHeight(); ++i) {
         res[i] = 0;
         for (int j = 0; j < M.getWidth(); ++j) {
@@ -54,13 +55,13 @@ vector<int> MatVecMultRow(Matrix<int> M, vector<int> V) {
 }
 
 // columnwise data decomposition
-vector<int> MatVecMultCol(Matrix<int> M, vector<int> V) {
+vector<int> MatVecMultCol(Matrix<int> &M, vector<int> &V, int threads = 4) {
     if (M.getWidth() != V.size()) {
         throw runtime_error("Wrong size");
     }
 
     vector<int> res(M.getHeight());
-#pragma omp parallel  shared(M, V, res) default(none)
+#pragma omp parallel  shared(M, V, res) default(none) num_threads(threads)
     {
 #pragma omp for
         for (int i = 0; i < res.size(); ++i) {
@@ -80,17 +81,17 @@ vector<int> MatVecMultCol(Matrix<int> M, vector<int> V) {
 }
 
 // checkerboard data decomposition
-vector<int> MatVecMultCB(Matrix<int> M, vector<int> V) {
+vector<int> MatVecMultCB(Matrix<int> &M, vector<int> &V, int threads = 4) {
     if (M.getWidth() != V.size()) {
         throw runtime_error("Wrong size");
     }
 
-    int blocksVer = 2;
-    int blocksHor = 2;
+    int blocksVer = omp_get_num_threads();
+    int blocksHor = omp_get_num_threads();
 
     vector<int> res(M.getHeight());
 
-#pragma omp parallel shared(M, V, res, blocksVer, blocksHor) default(none)
+#pragma omp parallel shared(M, V, res, blocksVer, blocksHor) default(none) num_threads(threads)
     {
 #pragma omp for
         for (int i = 0; i < res.size(); ++i) {
