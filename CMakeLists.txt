@@ -17,8 +17,11 @@ ELSE()
     message("Missed OpenMP!")
 ENDIF()
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstandalone-debug")
+
 add_subdirectory(libs)
 add_subdirectory(task_1)
 add_subdirectory(task_2)
 add_subdirectory(task_3)
 add_subdirectory(task_4)
+add_subdirectory(task_5)
